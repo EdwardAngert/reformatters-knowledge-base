@@ -72,10 +72,11 @@ In Railway dashboard, go to your service → Variables and add:
 
 ```
 ENVIRONMENT=production
-PORT=8000
-ALLOWED_ORIGINS=https://claude.ai,https://your-custom-domain.com
+ALLOWED_ORIGINS=https://claude.ai,http://localhost:*
 LOG_LEVEL=INFO
 ```
+
+**Note:** Railway automatically sets `PORT`, so you don't need to set it manually.
 
 Optional (for live S3 access):
 ```

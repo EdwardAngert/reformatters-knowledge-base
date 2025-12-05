@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -32,14 +32,23 @@ class ServerConfig(BaseSettings):
         description="Server port",
     )
 
-    allowed_origins: list[str] = Field(
+    allowed_origins: list[str] | str = Field(
         default_factory=lambda: [
             "https://claude.ai",
             "http://localhost:*",
             "http://127.0.0.1:*",
         ],
-        description="Allowed CORS origins",
+        description="Allowed CORS origins (comma-separated string or list)",
     )
+
+    @field_validator("allowed_origins", mode="before")
+    @classmethod
+    def parse_allowed_origins(cls, v):
+        """Parse allowed origins from string or list."""
+        if isinstance(v, str):
+            # Split comma-separated string
+            return [origin.strip() for origin in v.split(",") if origin.strip()]
+        return v
 
     knowledge_base_path: Path = Field(
         default_factory=lambda: Path(__file__).parent.parent.parent / "knowledge",
