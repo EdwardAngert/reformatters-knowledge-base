@@ -37,8 +37,9 @@ git push -u origin main
 ### Option A: One-Click Deploy
 
 1. Go to https://railway.app
-2. Click "New Project"
-3. Select "Deploy from GitHub repo"
+2. Click "New"
+3. Select "GitHub Repository"
+   - If this is your first time using Railway, select **Configure GitHub App** to allow Railway to access your GitHub repositories.
 4. Choose `reformatters-knowledge-base`
 5. Railway will automatically:
    - Detect the Dockerfile
