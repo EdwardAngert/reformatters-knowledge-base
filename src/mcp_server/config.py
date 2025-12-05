@@ -22,9 +22,12 @@ class ServerConfig(BaseSettings):
         description="Environment mode",
     )
 
+    # Don't read HOST from env - Railway sets it incorrectly
+    # We always want to bind to 0.0.0.0 for container deployments
     host: str = Field(
         default="0.0.0.0",
         description="Server host",
+        validation_alias=None,  # Prevent reading from HOST env var
     )
 
     port: int = Field(
