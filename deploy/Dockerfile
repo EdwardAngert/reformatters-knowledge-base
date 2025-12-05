@@ -24,4 +24,5 @@ ENV PYTHONUNBUFFERED=1
 ENV ENVIRONMENT=production
 
 # Run the HTTP server (for Railway deployment)
-CMD ["uvicorn", "mcp_server.server:app", "--host", "0.0.0.0", "--port", "8000"]
+# Use the server's main() which reads host/port from environment variables
+CMD ["python", "-m", "mcp_server.server"]
