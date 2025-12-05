@@ -3,79 +3,80 @@
 import logging
 from typing import Any
 
+from mcp import Tool
 from mcp.server import Server
 
 logger = logging.getLogger(__name__)
 
+# Tool definitions
+TOOLS = [
+    Tool(
+        name="list_datasets",
+        description="List all available reformatters datasets with optional filtering",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "provider": {
+                    "type": "string",
+                    "description": "Filter by provider (e.g., 'NOAA', 'ECMWF')",
+                },
+                "search": {
+                    "type": "string",
+                    "description": "Search term for dataset name or description",
+                },
+            },
+        },
+    ),
+    Tool(
+        name="get_dataset_info",
+        description="Get detailed information about a specific dataset",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "dataset_id": {
+                    "type": "string",
+                    "description": "Dataset identifier (e.g., 'noaa-gfs-forecast')",
+                },
+            },
+            "required": ["dataset_id"],
+        },
+    ),
+    Tool(
+        name="get_dataset_implementation",
+        description="Show how a dataset is implemented (TemplateConfig, RegionJob paths)",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "dataset_id": {
+                    "type": "string",
+                    "description": "Dataset identifier",
+                },
+            },
+            "required": ["dataset_id"],
+        },
+    ),
+]
+
 
 def register_tools(server: Server) -> None:
     """Register dataset metadata tools with the MCP server."""
+    # Tools are registered via the TOOLS list, handlers defined here
+    pass
 
-    @server.list_tools()
-    async def list_tools() -> list[dict[str, Any]]:
-        """List available dataset tools."""
-        return [
-            {
-                "name": "list_datasets",
-                "description": "List all available reformatters datasets with optional filtering",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {
-                        "provider": {
-                            "type": "string",
-                            "description": "Filter by provider (e.g., 'NOAA', 'ECMWF')",
-                        },
-                        "search": {
-                            "type": "string",
-                            "description": "Search term for dataset name or description",
-                        },
-                    },
-                },
-            },
-            {
-                "name": "get_dataset_info",
-                "description": "Get detailed information about a specific dataset",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {
-                        "dataset_id": {
-                            "type": "string",
-                            "description": "Dataset identifier (e.g., 'noaa-gfs-forecast')",
-                        },
-                    },
-                    "required": ["dataset_id"],
-                },
-            },
-            {
-                "name": "get_dataset_implementation",
-                "description": "Show how a dataset is implemented (TemplateConfig, RegionJob paths)",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {
-                        "dataset_id": {
-                            "type": "string",
-                            "description": "Dataset identifier",
-                        },
-                    },
-                    "required": ["dataset_id"],
-                },
-            },
-        ]
 
-    @server.call_tool()
-    async def call_tool(name: str, arguments: dict[str, Any]) -> list[dict[str, Any]]:
-        """Handle tool calls for dataset operations."""
-        if name == "list_datasets":
-            return await _list_datasets(
-                arguments.get("provider"),
-                arguments.get("search"),
-            )
-        elif name == "get_dataset_info":
-            return await _get_dataset_info(arguments["dataset_id"])
-        elif name == "get_dataset_implementation":
-            return await _get_dataset_implementation(arguments["dataset_id"])
-        else:
-            raise ValueError(f"Unknown tool: {name}")
+async def handle_tool_call(name: str, arguments: dict[str, Any]) -> list[dict[str, Any]]:
+    """Handle tool calls for dataset operations."""
+    if name == "list_datasets":
+        return await _list_datasets(
+            arguments.get("provider"),
+            arguments.get("search"),
+        )
+    elif name == "get_dataset_info":
+        return await _get_dataset_info(arguments["dataset_id"])
+    elif name == "get_dataset_implementation":
+        return await _get_dataset_implementation(arguments["dataset_id"])
+    else:
+        raise ValueError(f"Unknown tool: {name}")
 
 
 async def _list_datasets(provider: str | None, search: str | None) -> list[dict[str, Any]]:

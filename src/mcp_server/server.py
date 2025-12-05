@@ -12,7 +12,7 @@ from mcp.server import Server
 from mcp.server.sse import SseServerTransport
 
 from mcp_server.config import config
-from mcp_server.tools import dataset_tools, documentation_tools, knowledge_tools
+from mcp_server.tools import register_all_tools
 
 logging.basicConfig(
     level=getattr(logging, config.log_level),
@@ -25,9 +25,7 @@ mcp_server = Server("reformatters-knowledge-base")
 sse_transport = SseServerTransport("/messages/")
 
 # Register all tools with the MCP server
-dataset_tools.register_tools(mcp_server)
-documentation_tools.register_tools(mcp_server)
-knowledge_tools.register_tools(mcp_server)
+register_all_tools(mcp_server)
 
 
 @asynccontextmanager

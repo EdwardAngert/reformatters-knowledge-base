@@ -3,65 +3,66 @@
 import logging
 from typing import Any
 
+from mcp import Tool
 from mcp.server import Server
 
 logger = logging.getLogger(__name__)
 
+# Tool definitions
+TOOLS = [
+    Tool(
+        name="generate_dataset_readme",
+        description="Auto-generate markdown documentation for a dataset",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "dataset_id": {
+                    "type": "string",
+                    "description": "Dataset identifier",
+                },
+            },
+            "required": ["dataset_id"],
+        },
+    ),
+    Tool(
+        name="generate_cli_command",
+        description="Generate CLI command for a dataset operation",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "operation": {
+                    "type": "string",
+                    "enum": ["update-template", "backfill-local", "validate"],
+                    "description": "Operation to perform",
+                },
+                "dataset_id": {
+                    "type": "string",
+                    "description": "Dataset identifier",
+                },
+            },
+            "required": ["operation", "dataset_id"],
+        },
+    ),
+]
+
 
 def register_tools(server: Server) -> None:
     """Register documentation generation tools with the MCP server."""
+    # Tools are registered via the TOOLS list, handlers defined here
+    pass
 
-    @server.list_tools()
-    async def list_tools() -> list[dict[str, Any]]:
-        """List available documentation tools."""
-        return [
-            {
-                "name": "generate_dataset_readme",
-                "description": "Auto-generate markdown documentation for a dataset",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {
-                        "dataset_id": {
-                            "type": "string",
-                            "description": "Dataset identifier",
-                        },
-                    },
-                    "required": ["dataset_id"],
-                },
-            },
-            {
-                "name": "generate_cli_command",
-                "description": "Generate CLI command for a dataset operation",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {
-                        "operation": {
-                            "type": "string",
-                            "enum": ["update-template", "backfill-local", "validate"],
-                            "description": "Operation to perform",
-                        },
-                        "dataset_id": {
-                            "type": "string",
-                            "description": "Dataset identifier",
-                        },
-                    },
-                    "required": ["operation", "dataset_id"],
-                },
-            },
-        ]
 
-    @server.call_tool()
-    async def call_tool(name: str, arguments: dict[str, Any]) -> list[dict[str, Any]]:
-        """Handle tool calls for documentation operations."""
-        if name == "generate_dataset_readme":
-            return await _generate_dataset_readme(arguments["dataset_id"])
-        elif name == "generate_cli_command":
-            return await _generate_cli_command(
-                arguments["operation"],
-                arguments["dataset_id"],
-            )
-        else:
-            raise ValueError(f"Unknown tool: {name}")
+async def handle_tool_call(name: str, arguments: dict[str, Any]) -> list[dict[str, Any]]:
+    """Handle tool calls for documentation operations."""
+    if name == "generate_dataset_readme":
+        return await _generate_dataset_readme(arguments["dataset_id"])
+    elif name == "generate_cli_command":
+        return await _generate_cli_command(
+            arguments["operation"],
+            arguments["dataset_id"],
+        )
+    else:
+        raise ValueError(f"Unknown tool: {name}")
 
 
 async def _generate_dataset_readme(dataset_id: str) -> list[dict[str, Any]]:

@@ -4,69 +4,70 @@ import logging
 from pathlib import Path
 from typing import Any
 
+from mcp import Tool
 from mcp.server import Server
 
 from mcp_server.config import config
 
 logger = logging.getLogger(__name__)
 
+# Tool definitions
+TOOLS = [
+    Tool(
+        name="search_guides",
+        description="Search user guides in the knowledge base",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "Search query",
+                },
+            },
+            "required": ["query"],
+        },
+    ),
+    Tool(
+        name="search_playbooks",
+        description="Search support playbooks in the knowledge base",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "Search query",
+                },
+            },
+            "required": ["query"],
+        },
+    ),
+    Tool(
+        name="list_all_knowledge",
+        description="Browse entire knowledge base structure",
+        inputSchema={
+            "type": "object",
+            "properties": {},
+        },
+    ),
+]
+
 
 def register_tools(server: Server) -> None:
     """Register knowledge base tools with the MCP server."""
+    # Tools are registered via the TOOLS list, handlers defined here
+    pass
 
-    @server.list_tools()
-    async def list_tools() -> list[dict[str, Any]]:
-        """List available knowledge base tools."""
-        return [
-            {
-                "name": "search_guides",
-                "description": "Search user guides in the knowledge base",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {
-                        "query": {
-                            "type": "string",
-                            "description": "Search query",
-                        },
-                    },
-                    "required": ["query"],
-                },
-            },
-            {
-                "name": "search_playbooks",
-                "description": "Search support playbooks in the knowledge base",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {
-                        "query": {
-                            "type": "string",
-                            "description": "Search query",
-                        },
-                    },
-                    "required": ["query"],
-                },
-            },
-            {
-                "name": "list_all_knowledge",
-                "description": "Browse entire knowledge base structure",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {},
-                },
-            },
-        ]
 
-    @server.call_tool()
-    async def call_tool(name: str, arguments: dict[str, Any]) -> list[dict[str, Any]]:
-        """Handle tool calls for knowledge base operations."""
-        if name == "search_guides":
-            return await _search_guides(arguments["query"])
-        elif name == "search_playbooks":
-            return await _search_playbooks(arguments["query"])
-        elif name == "list_all_knowledge":
-            return await _list_all_knowledge()
-        else:
-            raise ValueError(f"Unknown tool: {name}")
+async def handle_tool_call(name: str, arguments: dict[str, Any]) -> list[dict[str, Any]]:
+    """Handle tool calls for knowledge base operations."""
+    if name == "search_guides":
+        return await _search_guides(arguments["query"])
+    elif name == "search_playbooks":
+        return await _search_playbooks(arguments["query"])
+    elif name == "list_all_knowledge":
+        return await _list_all_knowledge()
+    else:
+        raise ValueError(f"Unknown tool: {name}")
 
 
 async def _search_guides(query: str) -> list[dict[str, Any]]:
