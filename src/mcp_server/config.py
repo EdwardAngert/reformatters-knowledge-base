@@ -27,13 +27,19 @@ class ServerConfig(BaseSettings):
     host: str = Field(
         default="0.0.0.0",
         description="Server host",
-        validation_alias=None,  # Prevent reading from HOST env var
     )
 
     port: int = Field(
         default=8000,
         description="Server port",
     )
+
+    @field_validator("host", mode="before")
+    @classmethod
+    def force_bind_all_interfaces(cls, v):
+        """Force host to 0.0.0.0 for container deployments."""
+        # Railway incorrectly sets HOST=8000, ignore any bad values
+        return "0.0.0.0"
 
     allowed_origins: list[str] | str = Field(
         default_factory=lambda: [
