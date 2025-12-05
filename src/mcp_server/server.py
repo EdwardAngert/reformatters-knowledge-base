@@ -1,6 +1,7 @@
 """Main MCP server implementation."""
 
 import logging
+import os
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
 
@@ -103,6 +104,10 @@ logger.info("Registered MCP tools and resources")
 def main() -> None:
     """Main entry point."""
     import uvicorn
+
+    # Debug logging for Railway deployment
+    logger.info(f"Starting uvicorn with host={config.host}, port={config.port}")
+    logger.info(f"Environment variables: PORT={os.getenv('PORT')}, HOST={os.getenv('HOST')}")
 
     uvicorn.run(
         "mcp_server.server:app",
