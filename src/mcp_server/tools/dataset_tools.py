@@ -89,7 +89,15 @@ async def _list_datasets(provider: str | None, search: str | None) -> list[dict[
         return [
             {
                 "type": "text",
-                "text": "Error: Unable to import reformatters. Make sure it's installed as a dependency.",
+                "text": "⚠️ The `reformatters` package is not installed. These tools require the reformatters codebase.\n\n"
+                "To use dataset tools:\n"
+                "1. Clone reformatters: `git clone https://github.com/dynamical/reformatters.git`\n"
+                "2. Install it: `cd reformatters && uv sync`\n"
+                "3. Make sure it's in your Python path\n\n"
+                "For now, use knowledge base search tools instead:\n"
+                "- `search_guides` - Search user guides\n"
+                "- `search_playbooks` - Search troubleshooting playbooks\n"
+                "- `list_all_knowledge` - Browse all documentation",
             }
         ]
 
@@ -144,7 +152,7 @@ async def _get_dataset_info(dataset_id: str) -> list[dict[str, Any]]:
         return [
             {
                 "type": "text",
-                "text": "Error: Unable to import reformatters.",
+                "text": "⚠️ The `reformatters` package is not installed. See `list_datasets` tool for installation instructions.",
             }
         ]
 
@@ -198,7 +206,7 @@ async def _get_dataset_implementation(dataset_id: str) -> list[dict[str, Any]]:
         return [
             {
                 "type": "text",
-                "text": "Error: Unable to import reformatters.",
+                "text": "⚠️ The `reformatters` package is not installed. See `list_datasets` tool for installation instructions.",
             }
         ]
 

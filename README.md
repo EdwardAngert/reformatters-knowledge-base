@@ -141,6 +141,32 @@ curl http://localhost:8000/health  # Should return {"status":"healthy"}
 uv run pytest
 ```
 
+## Knowledge Base Content
+
+### 📚 Comprehensive Documentation (17 Documents)
+
+**Guides** (6 documents):
+- **Getting Started** - Installation and first steps
+- **Dataset Integration Guide** - Step-by-step integration
+- **FAQ** - 60+ common questions and answers
+- **Common Errors** - 30+ error patterns with solutions
+- **CLI Cheatsheet** - Quick command reference
+- **Architecture Overview** - System design and concepts
+
+**Playbooks** (5 documents):
+- **Backfill Failures** - Diagnosing and fixing backfill issues
+- **AWS Credentials Errors** - Resolving permissions problems
+- **Validation Failures** - Troubleshooting data validation
+- **Memory and Resource Issues** - OOM, disk, CPU problems
+- **Running Backfills** - Complete operational guide
+
+**Examples** (3 code samples):
+- **Minimal TemplateConfig** - Starting point for new datasets
+- **Minimal RegionJob** - Processing logic example
+- **Custom Validator** - Data validation examples
+
+**For Technical Writers**: See [TECHNICAL_WRITER_GUIDE.md](TECHNICAL_WRITER_GUIDE.md) for comprehensive documentation roadmap and templates.
+
 ## Capabilities
 
 ### MCP Tools
@@ -150,7 +176,7 @@ uv run pytest
 - `search_playbooks` - Find support playbooks
 - `list_all_knowledge` - Browse entire knowledge base
 
-**Dataset Tools**
+**Dataset Tools** (requires reformatters package installed)
 - `list_datasets` - List all reformatters datasets
 - `get_dataset_info` - Get detailed dataset information
 - `get_dataset_implementation` - Show implementation details
